@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Chamados DTI</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Sistema de Chamados DTI</h1>
+            <nav>
+                <ul>
+                    <li><a href="#" class="active" id="nav-form">Novo Chamado</a></li>
+                    <li><a href="#" id="nav-dashboard">Dashboard</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Formulário de Abertura de Chamados -->
+        <section id="form-section" class="section-visible">
+            <h2>Abertura de Chamado</h2>
+            <form id="chamado-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="secretaria">Secretaria:</label>
+                        <input type="text" id="secretaria" name="secretaria" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="departamento">Departamento:</label>
+                        <input type="text" id="departamento" name="departamento" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="usuario">Usuário:</label>
+                        <input type="text" id="usuario" name="usuario" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="telefone">Telefone de Contato:</label>
+                        <input type="tel" id="telefone" name="telefone" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="equipamento">Equipamento:</label>
+                        <input type="text" id="equipamento" name="equipamento" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="patrimonio">Nº Patrimônio:</label>
+                        <input type="text" id="patrimonio" name="patrimonio">
+                    </div>
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="problema">Descrição do Problema:</label>
+                    <textarea id="problema" name="problema" rows="4" required></textarea>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Abrir Chamado</button>
+                    <button type="reset" class="btn btn-secondary">Limpar</button>
+                </div>
+            </form>
+        </section>
+
+        <!-- Dashboard -->
+        <section id="dashboard-section" class="section-hidden">
+            <h2>Dashboard de Chamados</h2>
+            
+            <div class="dashboard-filters">
+                <div class="filter-group">
+                    <label for="filter-status">Status:</label>
+                    <select id="filter-status">
+                        <option value="todos">Todos</option>
+                        <option value="aberto">Aberto</option>
+                        <option value="em-andamento">Em Andamento</option>
+                        <option value="resolvido">Resolvido</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="filter-secretaria">Secretaria:</label>
+                    <select id="filter-secretaria">
+                        <option value="todas">Todas</option>
+                        <!-- Será preenchido dinamicamente -->
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="filter-periodo">Período:</label>
+                    <select id="filter-periodo">
+                        <option value="todos">Todos</option>
+                        <option value="7dias">Últimos 7 dias</option>
+                        <option value="30dias">Últimos 30 dias</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="dashboard-cards">
+                <div class="card">
+                    <h3>Total de Chamados</h3>
+                    <p class="card-value" id="total-chamados">0</p>
+                </div>
+                <div class="card">
+                    <h3>Abertos</h3>
+                    <p class="card-value" id="abertos-chamados">0</p>
+                </div>
+                <div class="card">
+                    <h3>Em Andamento</h3>
+                    <p class="card-value" id="andamento-chamados">0</p>
+                </div>
+                <div class="card">
+                    <h3>Resolvidos</h3>
+                    <p class="card-value" id="resolvidos-chamados">0</p>
+                </div>
+            </div>
+
+            <div class="dashboard-charts">
+                <div class="chart-container">
+                    <h3>Chamados por Status</h3>
+                    <canvas id="status-chart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h3>Chamados por Secretaria</h3>
+                    <canvas id="secretaria-chart"></canvas>
+                </div>
+            </div>
+
+            <div class="dashboard-charts">
+                <div class="chart-container">
+                    <h3>Chamados por Equipamento</h3>
+                    <canvas id="equipamento-chart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h3>Tempo Médio de Resolução (dias)</h3>
+                    <canvas id="tempo-chart"></canvas>
+                </div>
+            </div>
+
+            <div class="chamados-table-container">
+                <h3>Lista de Chamados</h3>
+                <table id="chamados-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Data</th>
+                            <th>Secretaria</th>
+                            <th>Usuário</th>
+                            <th>Equipamento</th>
+                            <th>Problema</th>
+                            <th>Status</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Será preenchido dinamicamente -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal para detalhes do chamado -->
+    <div id="chamado-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Detalhes do Chamado</h2>
+            <div id="chamado-details">
+                <!-- Será preenchido dinamicamente -->
+            </div>
+            <div class="modal-actions">
+                <button id="update-status" class="btn btn-primary">Atualizar Status</button>
+                <button id="close-modal" class="btn btn-secondary">Fechar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mensagem de feedback -->
+    <div id="feedback-message" class="feedback-hidden">
+        <p id="feedback-text"></p>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Sistema de Chamados DTI</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
