@@ -1,5 +1,5 @@
 // Configuração da API do Google Sheets
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyOmnk8T3naYO4EDMt6AWorsRzjxDUbXN3C28AFMT0--TGrhuqXz3QfGfsLtdj1mio/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx0dKoFGDkavegizgfwmBrQN9GDYhGJu6zOvGZlPSmt_DXPmP7guRV70xt_74FNDw0/exec';
 
 // Elementos DOM
 const formSection = document.getElementById('form-section');
